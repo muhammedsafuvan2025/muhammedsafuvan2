@@ -12,14 +12,14 @@
     background-repeat: no-repeat;
     pointer-events: none;
     z-index: 0;
-    filter: grayscale(80%) blur(0.5px);
-    opacity: 0.38;
+    filter: grayscale(100%) blur(0.5px);
+    opacity: 0.18;
     -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 40%, transparent 80%);
     mask-image: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 40%, transparent 80%);
 }
 
 [data-theme="dark"] .portrait-bg {
-    opacity: 0.35;
+    opacity: 0.25;
 }
 
 :root {
@@ -1782,4 +1782,166 @@ section {
     html {
         scroll-behavior: smooth;
     }
+}
+
+
+/* ============================================================
+   GLITCH EFFECT
+   ============================================================ */
+.glitch-name {
+    position: relative;
+    display: inline-block;
+}
+.glitch-name::before,
+.glitch-name::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+}
+.glitch-name.glitching {
+    animation: glitch-main 0.4s steps(2) forwards;
+}
+.glitch-name.glitching::before {
+    opacity: 1;
+    animation: glitch-red 0.4s steps(2) forwards;
+    color: #ff3c6e;
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    transform: translateX(-3px);
+}
+.glitch-name.glitching::after {
+    opacity: 1;
+    animation: glitch-blue 0.4s steps(2) forwards;
+    color: #00d4ff;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    transform: translateX(3px);
+}
+@keyframes glitch-main {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-2px) skewX(-1deg); }
+    40%  { transform: translateX(2px) skewX(1deg); }
+    60%  { transform: translateX(-1px); }
+    80%  { transform: translateX(1px); }
+    100% { transform: translateX(0); }
+}
+@keyframes glitch-red {
+    0%   { transform: translateX(-3px); clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); }
+    33%  { transform: translateX(3px);  clip-path: polygon(0 50%, 100% 50%, 100% 65%, 0 65%); }
+    66%  { transform: translateX(-2px); clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%); }
+    100% { transform: translateX(0);   opacity: 0; }
+}
+@keyframes glitch-blue {
+    0%   { transform: translateX(3px);  clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+    33%  { transform: translateX(-3px); clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); }
+    66%  { transform: translateX(2px);  clip-path: polygon(0 70%, 100% 70%, 100% 85%, 0 85%); }
+    100% { transform: translateX(0);    opacity: 0; }
+}
+
+/* ============================================================
+   SKILL CHARGE-UP TAGS
+   ============================================================ */
+.skill-tag-chargeable {
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease, box-shadow 0.3s ease;
+}
+.skill-tag-chargeable::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    transform: translateX(-102%);
+    transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 0;
+    border-radius: inherit;
+}
+.skill-tag-chargeable span,
+.skill-tag-chargeable {
+    position: relative;
+    z-index: 1;
+}
+.skill-tag-chargeable.charged::before {
+    transform: translateX(0);
+}
+.skill-tag-chargeable.charged {
+    color: #fff;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================================
+   TERMINAL BLOCK
+   ============================================================ */
+.terminal-block {
+    margin-top: 3rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0d1117;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.12), 0 20px 40px rgba(0,0,0,0.3);
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+.terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: #161b22;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.t-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.t-red    { background: #ff5f57; }
+.t-yellow { background: #ffbd2e; }
+.t-green  { background: #28c840; }
+.t-title {
+    margin-left: 8px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Courier New', monospace;
+}
+.terminal-body {
+    padding: 1.2rem 1.5rem;
+    min-height: 160px;
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.terminal-body::-webkit-scrollbar { display: none; }
+.t-line {
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.t-cmd { color: #79c0ff; }
+.t-out { color: #7ee787; padding-left: 1rem; }
+.t-prompt { color: #6366f1; font-weight: bold; }
+.t-content { }
+
+/* ============================================================
+   MATRIX EMAIL
+   ============================================================ */
+a[href^="mailto:"] {
+    transition: color 0.2s;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.02em;
+}
+a[href^="mailto:"]:hover {
+    color: var(--accent-primary);
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================================
+   PORTRAIT PARALLAX (override transition for JS smoothness)
+   ============================================================ */
+.portrait-bg {
+    will-change: transform, filter, opacity;
+    transition: none !important;
 }
