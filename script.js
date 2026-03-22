@@ -453,6 +453,93 @@ const styleEl = document.createElement('style');
 styleEl.textContent = '.nav-link.active{color:var(--accent-primary)}.nav-link.active::after{width:100%}';
 document.head.appendChild(styleEl);
 
+
+// ============================================================
+//  CUSTOM CURSOR
+// ============================================================
+function initCustomCursor() {
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+
+    // Don't init on touch devices
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    let dotX = 0, dotY = 0;
+    let ringX = 0, ringY = 0;
+    let mouseX = 0, mouseY = 0;
+
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        // Dot follows instantly
+        dotX = mouseX; dotY = mouseY;
+        dot.style.left = dotX + 'px';
+        dot.style.top  = dotY + 'px';
+    });
+
+    // Ring lags behind smoothly
+    function animateRing() {
+        ringX += (mouseX - ringX) * 0.12;
+        ringY += (mouseY - ringY) * 0.12;
+        ring.style.left = ringX + 'px';
+        ring.style.top  = ringY + 'px';
+        requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Cursor state changes
+    const interactiveEls = 'a, button, .btn, .nav-link, .skill-tag, .project-card, .floating-card, .cmd-btn, .scroll-top, #muteBtn, .theme-toggle';
+    const textEls = 'p, h1, h2, h3, h4, li, span:not(.t-dot):not(.otw-dot)';
+
+    document.addEventListener('mouseover', e => {
+        if (e.target.closest(interactiveEls)) {
+            document.body.classList.add('cursor-hover');
+            document.body.classList.remove('cursor-text');
+        } else if (e.target.closest(textEls)) {
+            document.body.classList.add('cursor-text');
+            document.body.classList.remove('cursor-hover');
+        } else {
+            document.body.classList.remove('cursor-hover', 'cursor-text');
+        }
+    });
+
+    document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
+    document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-click'));
+    document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+    document.addEventListener('mouseenter', () => { dot.style.opacity = ''; ring.style.opacity = ''; });
+}
+
+// ============================================================
+//  MAGNETIC BUTTONS
+// ============================================================
+function initMagneticButtons() {
+    const buttons = document.querySelectorAll('.btn');
+    const STRENGTH = 0.35;
+
+    buttons.forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+            const r    = btn.getBoundingClientRect();
+            const cx   = r.left + r.width  / 2;
+            const cy   = r.top  + r.height / 2;
+            const dx   = e.clientX - cx;
+            const dy   = e.clientY - cy;
+
+            btn.style.transform = `translate(${dx * STRENGTH}px, ${dy * STRENGTH}px)`;
+
+            // Update radial gradient origin for glow
+            const bx = ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%';
+            const by = ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%';
+            btn.style.setProperty('--bx', bx);
+            btn.style.setProperty('--by', by);
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
 // ============================================================
 //  BOOT
 // ============================================================
@@ -473,4 +560,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMatrixEmail();
     initMuteToggle();
     initButtonSounds();
+    initCustomCursor();
+    initMagneticButtons();
 });

@@ -449,7 +449,7 @@ body > * {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding-top: 80px;
+    padding-top: 110px;
     background: var(--bg-primary);
     position: relative;
     overflow: hidden;
@@ -1913,4 +1913,154 @@ a[href^="mailto:"]:hover {
 .portrait-bg {
     will-change: transform, filter, opacity;
     transition: none !important;
+}
+
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+*, *::before, *::after { cursor: none !important; }
+
+.cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.15s ease, height 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+    mix-blend-mode: difference;
+}
+
+.cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--accent-primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.23,1,0.32,1),
+                height 0.3s cubic-bezier(0.23,1,0.32,1),
+                border-color 0.3s ease,
+                opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+/* Hover states - ring expands on interactive elements */
+body.cursor-hover .cursor-ring {
+    width: 56px; height: 56px;
+    border-color: var(--accent-secondary);
+    opacity: 0.5;
+}
+body.cursor-hover .cursor-dot {
+    width: 6px; height: 6px;
+    opacity: 0.6;
+}
+
+/* Click state */
+body.cursor-click .cursor-dot {
+    width: 14px; height: 14px;
+    background: var(--accent-secondary);
+}
+body.cursor-click .cursor-ring {
+    width: 20px; height: 20px;
+    opacity: 1;
+}
+
+/* Text cursor state */
+body.cursor-text .cursor-dot {
+    width: 2px; height: 22px;
+    border-radius: 2px;
+    background: var(--accent-primary);
+}
+body.cursor-text .cursor-ring {
+    opacity: 0;
+}
+
+/* Hide on mobile */
+@media (hover: none) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    *, *::before, *::after { cursor: auto !important; }
+}
+
+/* ============================================================
+   MAGNETIC BUTTONS
+   ============================================================ */
+.btn {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.23,1,0.32,1),
+                box-shadow 0.3s ease,
+                background 0.3s ease,
+                color 0.3s ease !important;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5), 0 0 0 1px rgba(99,102,241,0.3) !important;
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Magnetic pull glow */
+.btn::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--bx, 50%) var(--by, 50%), rgba(99,102,241,0.25), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+.btn:hover::after {
+    opacity: 1;
+}
+
+/* ============================================================
+   OPEN TO WORK BADGE
+   ============================================================ */
+.open-to-work-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #22c55e;
+    margin-bottom: 1.2rem;
+    width: fit-content;
+    backdrop-filter: blur(8px);
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.otw-dot {
+    width: 8px; height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.otw-dot::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.4);
+    animation: otw-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes otw-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%       { transform: scale(1.8); opacity: 0; }
 }
