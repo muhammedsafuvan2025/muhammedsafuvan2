@@ -80,7 +80,7 @@ function initMuteToggle() {
     btn.id = 'muteBtn';
     btn.setAttribute('aria-label', 'Toggle sound');
     btn.innerHTML = '🔊';
-    btn.style.cssText = 'position:fixed;bottom:5rem;right:1.5rem;z-index:9999;width:44px;height:44px;border-radius:50%;border:1px solid var(--border-color);background:var(--glass-bg);backdrop-filter:blur(10px);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;box-shadow:var(--shadow-md);';
+    btn.style.cssText = 'position:fixed;bottom:8.5rem;right:1.5rem;z-index:9999;width:44px;height:44px;border-radius:50%;border:1px solid var(--border-color);background:var(--glass-bg);backdrop-filter:blur(10px);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;box-shadow:var(--shadow-md);';
     btn.addEventListener('click', () => {
         soundEnabled = !soundEnabled;
         btn.innerHTML = soundEnabled ? '🔊' : '🔇';
@@ -469,7 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initGlitch();
     initScramble();
     initParticles();
-    initSkillChargeUp();
     initTerminal();
     initMatrixEmail();
     initMuteToggle();
